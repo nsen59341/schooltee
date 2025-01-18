@@ -1,0 +1,87 @@
+{% load static %}
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta class="csrf_token" content="{{ csrf_token }}">
+  <title>Assignment - SchoolTee</title>
+  <link rel="stylesheet" href="{% static 'css/assignment.css' %}">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Assignment - SchoolTee</h1>
+    <form id="quizForm">
+      <input type="hidden" id="assid" value="{{ assid }}">
+      {% for k,assignment in assignments %}
+      <div class="question">
+        <h3>{{ assignment.question|url_decode }}</h3>
+        <ul class="options">
+            {% for i,answer in assignment.answers %}
+            <li><label><input type="radio" id="{{k}}_{{i}}" name="{{k}}" value="{{answer}}"> {{ answer|url_decode }}</label></li>
+            {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+      
+      
+      <button type="submit" class="submit-btn">Submit</button>
+    </form>
+  </div>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script>
+    let corrects_arr = [];
+    const ln =  $(".options").length;
+    // console.log('ln',ln);
+    for(let i=0; i<ln; i++){
+        corrects_arr[i] = false;
+    }
+    let points = 0;
+    $(".options li input").on('click', function(e) {
+        const sel = $(this).val();
+        const id = $(this).prop('name');
+        const data = {
+            'id': id,
+            'sel_ans': sel
+        }
+        $.ajax({
+            url: "/check_ans",
+            type: "POST",
+            data: data,
+            headers: {
+                "X-CSRFToken": $(".csrf_token").attr('content')
+            },
+            success: function(res){
+                // console.log(res);
+                corrects_arr[id] = res['correct'];
+                console.log(corrects_arr);
+            }
+        });
+    });
+
+    document.getElementById('quizForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      points = corrects_arr.filter(val => val==true).length;
+      //   console.log(points);
+      let percentage = (parseFloat((points/ln)*100)).toFixed(2);
+      $.ajax({
+            url: "/stote_points",
+            type: "POST",
+            data: {'percentage': percentage, 'assignment_id': $("#assid").val() },
+            headers: {
+                "X-CSRFToken": $(".csrf_token").attr('content')
+            },
+            success: function(res){
+                let success = res['success'];
+                if(success==true){
+                    window.location.href = "/";
+                }
+            }
+        });
+    });
+
+  </script>
+</body>
+</html> 

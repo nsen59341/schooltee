@@ -1,0 +1,23 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+
+<div>
+    <form method="post">
+        {% csrf_token %}
+        <h2>Registration Form</h2>
+        <div class="form-fields">
+            {{ regForm.as_p }}
+        </div>
+        <button type="submit">Register</button>
+    </form>
+</div>
+
+<!-- <div class="errors">
+    {% for err in regForm.errors %}
+        <span>{{ err }}</span>
+    {% endfor %}
+</div> -->
+
+<div>
+    <a href="{% url 'login' %}">Already here? Sign in here.</a>
+</div>

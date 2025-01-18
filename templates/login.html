@@ -1,0 +1,21 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+
+<form method="post", action="{% url 'login' %}" class="form-container">
+    {% csrf_token %}
+    <h2 class="form-title">Login</h2>
+    <div class="form-fields">
+        {{ loginForm.as_p }}
+    </div>
+    <button type="submit">Login</button>
+</form>
+
+<!-- <div class="errors">
+    {% for err in loginForm.errors %}
+        <span>{{ err }}</span>
+    {% endfor %}
+</div> -->
+
+<div>
+    <a href="{% url 'registration' %}">New user? Sign up here.</a>
+</div>
