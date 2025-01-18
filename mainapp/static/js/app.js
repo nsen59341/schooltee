@@ -18,7 +18,7 @@ function goToLessons(sid) {
                     <td>${el.title}</td>
                     <td>${el.topic}</td>
                     <td>${el.teacher_details.name}</td>
-                    <td><a href="${el.link}" target="_blank">Go</a></td>
+                    <td><a href="${el.link}" target="_blank">Access</a></td>
                 </tr>`;
         });
         $(".table-container tbody").html(html);
@@ -66,7 +66,7 @@ function goToAssignments(sid) {
                 <td>${assignment.lesson_details.title}</td>
                 <td>${assignment.lesson_details.topic}</td>
                 <td>${assignment.teacher_details.name}</td>
-                <td><a href="/assignment/${assignment.id}" target="_blank">Go</a></td>`;
+                <td><a href="/assignment/${assignment.id}" target="_blank">Access</a></td>`;
                 if(performance.percentage) {
                     html += `<td> ${performance.percentage} </td>`;
                 }
